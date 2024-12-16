@@ -1,63 +1,48 @@
-/* eslint-disable react-hooks/rules-of-hooks */
+// issue.js
 import { validateParams } from "../util/validateApi";
 import apiCall from "./apiCall";
-import { useApiClient } from "./tokenApi";
 
 const issue = {
-  getAllIssue: async (data) => {
-    const apiClient = useApiClient();
-
-    // 유효성 검사: 필요하면 조건 추가
-    validateParams(data.param, ["pid", "isid"]);
+  getAllIssue: async (apiClient, data) => {
+    // 유효성 검사
     if (!data) throw new Error("Data is required to fetch all issues.");
+    // validateParams(data.param, ["pid", "isid"]);
 
-    return await apiCall(apiClient, "get", "/api/issue/", {
+    return await apiCall(apiClient, "get", "/api/issue/all", {
       params: data.param,
     });
   },
 
-  getIssueInfo: async (data) => {
-    const apiClient = useApiClient();
-
-    // 유효성 검사
+  getIssueInfo: async (apiClient, data) => {
     validateParams(data, ["pid", "isid"]);
-
     return await apiCall(apiClient, "get", `/api/issue/${data.issueId}`);
   },
 
-  editIssue: async (data) => {
-    const apiClient = useApiClient();
-
-    // 유효성 검사
+  editIssue: async (apiClient, data) => {
     validateParams(data.param, ["pid", "isid"]);
     if (!data.body) throw new Error("Body data is required for editing issue.");
 
     return await apiCall(apiClient, "put", `/api/issue/edit/`, {
-      params: data.param,
+      params: {
+        pid: 1,
+      },
       body: data.body,
     });
   },
 
-  addIssue: async (data) => {
-    const apiClient = useApiClient();
-
-    // 유효성 검사
-    validateParams(data.param, ["pid"]);
+  addIssue: async (apiClient, data) => {
+    validateParams({ pid: 1 }, ["pid"]);
     if (!data.body)
       throw new Error("Body data is required to add a new issue.");
 
-    return await apiCall(apiClient, "post", "/api/issue/add/", {
-      params: data.param,
+    return await apiCall(apiClient, "post", "/api/issue/add", {
+      params: { pid: 1 },
       body: data.body,
     });
   },
 
-  deleteIssue: async (data) => {
-    const apiClient = useApiClient();
-
-    // 유효성 검사
+  deleteIssue: async (apiClient, data) => {
     validateParams(data.param, ["pid", "isid"]);
-
     return await apiCall(apiClient, "delete", "/api/issue/delete/", {
       params: data.param,
     });

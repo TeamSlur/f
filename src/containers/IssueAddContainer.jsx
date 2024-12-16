@@ -1,17 +1,20 @@
 import { useState, useEffect } from "react";
 import IssueAddComponent from "../components/IssueAddComponent";
-import issue from "../apis/issue";
+import axios from "axios";
+import { useRecoilValue } from "recoil";
+import { rc_token } from "../store/user";
 
-const IssueAddContainer = ({ onClose, type, issueData }) => {
+const IssueAddContainer = ({ onClose, type, issueData, refetchData }) => {
   const [issueName, setIssueName] = useState("");
-  const [issuePriority, setIssuePriority] = useState("Low");
-  const [issueTag, setIssueTag] = useState("버그");
+  const [issuePriority, setIssuePriority] = useState(1);
+  const [issueTag, setIssueTag] = useState("0");
   const [frontWork, setFrontWork] = useState("");
   const [endWork, setEndWork] = useState("");
   const [task, setTask] = useState("");
   const [description, setDescription] = useState("");
+  const token = useRecoilValue(rc_token);
 
-  // edit일 때 데이터 관리
+  // edit일 때 기존 데이터 로딩
   useEffect(() => {
     if (type === "edit" && issueData) {
       setIssueName(issueData.title);
@@ -23,7 +26,7 @@ const IssueAddContainer = ({ onClose, type, issueData }) => {
     }
   }, [type, issueData]);
 
-  // 입력값 처리
+  // 입력값 처리 핸들러
   const handleIssueNameChange = (e) => setIssueName(e.target.value);
   const handlePriorityChange = (e) => setIssuePriority(e.target.value);
   const handleTagChange = (e) => setIssueTag(e.target.value);
@@ -32,43 +35,48 @@ const IssueAddContainer = ({ onClose, type, issueData }) => {
   const handleTaskChange = (e) => setTask(e.target.value);
   const handleDescriptionChange = (e) => setDescription(e.target.value);
 
-  // 저장 버튼 클릭 처리
-  const handleSave = () => {
+  const handleSave = async () => {
     if (type === "add") {
-      console.log("Adding new issue:", {
-        issueName,
-        issuePriority,
-        issueTag,
-        frontWork,
-        endWork,
-        task,
-        description,
-      });
-      issue.addIssue({
-        issueName,
-        issuePriority,
-        issueTag,
-        frontWork,
-        endWork,
-        task,
-        description,
-      });
+      try {
+        await axios.post(
+          "http://localhost:8080/api/issue/add",
+          {
+            issueName: issueName,
+            issueCategory: issueTag,
+            issueContent: description,
+            issuePriority: issuePriority,
+            issueRelated_front: frontWork,
+            issueRelated_end: endWork,
+            taskId: 1,
+          },
+          {
+            params: {
+              pid: 1,
+            },
+            headers: {
+              authorization: token,
+            },
+          }
+        );
+
+        // 새로운 이슈를 추가한 뒤 데이터 재로드
+        await refetchData();
+      } catch (error) {
+        console.error(error);
+      }
     } else if (type === "edit") {
-      console.log("Updating issue:", {
-        issueName,
-        issuePriority,
-        issueTag,
-        frontWork,
-        endWork,
-        task,
-        description,
-      });
+      // 수정 로직 구현 시 여기에 추가
+      // 수정 후 리패치 필요시 아래 refetchData 호출
+      await refetchData();
     }
+
+    // 모달 닫기
     onClose();
   };
 
-  const handleDelete = () => {
-    console.log("Deleting issue:", issueData);
+  const handleDelete = async () => {
+    // 삭제 로직 구현 시 여기에 추가
+    // 삭제 후 재로드 필요 시 refetchData 호출
     onClose();
   };
 

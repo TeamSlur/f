@@ -2,22 +2,18 @@
 import React from "react";
 import styled from "styled-components";
 import IssueAddContainer from "../containers/IssueAddContainer";
-const IssueAddModal = ({ isOpen, onClose, type }) => {
+const IssueAddModal = ({ isOpen, onClose, type, refetchData }) => {
   if (!isOpen) return null;
-
-  console.log(type);
 
   const dummyData = {
     title: "Sample Issue Title",
-    content:
-      "This is a description of the issue, detailing the problem or feature request.",
+    content: "This is a description of the issue...",
     primary: "1",
     types: "버그",
     front_work: null,
     end_work: null,
   };
 
-  console.log(type);
   return (
     <ModalBackground onClick={onClose}>
       <ModalContent onClick={(e) => e.stopPropagation()}>
@@ -25,6 +21,7 @@ const IssueAddModal = ({ isOpen, onClose, type }) => {
           type={type}
           issueData={type === "edit" ? dummyData : null}
           onClose={onClose}
+          refetchData={refetchData} // 추가
         />
         <CloseButton onClick={onClose}>X</CloseButton>
       </ModalContent>

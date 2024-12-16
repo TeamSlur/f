@@ -2,8 +2,25 @@ import React from "react";
 import styled from "styled-components";
 
 const IssueType = ({ type }) => {
+  const getTypeFromCategory = (category) => {
+    switch (category) {
+      case "0":
+        return "버그";
+      case "1":
+        return "개선";
+      case "2":
+        return "새 기능";
+      case "3":
+        return "이슈";
+      default:
+        return "";
+    }
+  };
+
+  const displayType = getTypeFromCategory(type);
+
   const getIconClass = () => {
-    switch (type) {
+    switch (displayType) {
       case "버그":
         return "fa-solid fa-exclamation";
       case "개선":
@@ -18,10 +35,10 @@ const IssueType = ({ type }) => {
   };
 
   return (
-    <IssueTypeBlock className="drag-prevent" type={type}>
+    <IssueTypeBlock className="drag-prevent" $displayType={displayType}>
       <ContentWrapper>
         <i className={getIconClass()}></i>
-        <span>{type}</span>
+        <span>{displayType}</span>
       </ContentWrapper>
     </IssueTypeBlock>
   );
@@ -43,8 +60,8 @@ const IssueTypeBlock = styled.div`
   color: white;
   font-weight: bold;
   font-size: 0.85em;
-  background-color: ${({ type }) => {
-    switch (type) {
+  background-color: ${({ $displayType }) => {
+    switch ($displayType) {
       case "버그":
         return "red";
       case "개선":
@@ -57,54 +74,11 @@ const IssueTypeBlock = styled.div`
         return "black";
     }
   }};
-
-  /* i {
-        margin-right: 5px;
-        padding-top: 2.5px;
-    }
-  }};
-
-  i {
-    margin-right: 5px;
-    padding-top: 2.5px;
-  }
-  border-radius: 20px;
-  height: 21px;
-  display: inline-block;
-  color: white;
-  font-weight: bold;
-  font-size: ${({ type }) => {
-    switch (type) {
-      case "버그":
-        return "1em";
-      case "개선":
-        return "1em";
-      case "새 기능":
-        return "0.9em";
-      case "이슈":
-        return "1em";
-      default:
-        return "black";
-    }
-  }};
-  background-color: ${({ type }) => {
-    switch (type) {
-      case "버그":
-        return "red";
-      case "개선":
-        return "green";
-      case "새 기능":
-        return "#1ea81e";
-      case "이슈":
-        return "grey";
-      default:
-        return "black";
-    }
-  }}; */
 
   i {
     margin-right: 5px;
     padding-top: 2.5px;
   }
 `;
+
 export default IssueType;

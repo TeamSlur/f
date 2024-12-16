@@ -1,12 +1,13 @@
 /* eslint-disable no-undef */
 import axios from "axios";
-import { rc_userInfo } from "../store/user";
+import { rc_token } from "../store/user";
+import { useRecoilValue } from "recoil";
 
-export const useApiClient = () => {
-  const token = useRecoilValue(rc_userInfo);
+export const UseApiClient = () => {
+  const token = useRecoilValue(rc_token);
 
   const apiClient = axios.create({
-    baseURL: "https://localhost:8080",
+    baseURL: "http://localhost:8080",
   });
 
   // 요청 인터셉터

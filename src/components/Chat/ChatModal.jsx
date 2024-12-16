@@ -24,7 +24,9 @@ const ChatModal = ({ isOpen, onClose, userName, isPinned, togglePin }) => {
   if (!isOpen) return null;
 
   return (
-    <ModalWrapper isPinned={isPinned}>
+    <ModalWrapper $isPinned={isPinned}>
+      {" "}
+      {/* 여기서 $isPinned로 변경 */}
       <ModalContent>
         <Header>
           <h4>Chat Room</h4>
@@ -74,12 +76,11 @@ const Message = ({ isOwnMessage, sender, content }) => (
 
 export default ChatModal;
 
-// 스타일 정의
 const ModalWrapper = styled.div`
   position: fixed;
   top: 0;
   right: 0;
-  width: ${({ isPinned }) => (isPinned ? "20%" : "20%")};
+  width: ${({ $isPinned }) => ($isPinned ? "20%" : "20%")};
   height: 100%;
   background: #f7f8fa;
   border-left: 1px solid #ddd;
@@ -156,8 +157,8 @@ const SenderName = styled.div`
 `;
 
 const MessageContent = styled.div`
-  background: #fff; /* 모든 메시지 흰 배경 */
-  color: #333; /* 모든 메시지 검은 글자 */
+  background: #fff;
+  color: #333;
   padding: 10px 15px;
   border-radius: ${({ isOwnMessage }) =>
     isOwnMessage ? "15px 15px 0px 15px" : "15px 15px 15px 0px"};
@@ -165,11 +166,10 @@ const MessageContent = styled.div`
   max-width: 60%;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 
-  /* Markdown 렌더링 스타일 적용 */
   .w-md-editor,
   .w-md-editor * {
-    background: transparent !important; /* 투명 배경 */
-    color: inherit !important; /* 글자 색상 상속 */
+    background: transparent !important;
+    color: inherit !important;
   }
 `;
 

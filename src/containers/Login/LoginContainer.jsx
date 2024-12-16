@@ -3,10 +3,13 @@ import { useState } from "react";
 import LoginComponent from "../../components/Login/LoginComponent";
 import { useNavigate } from "react-router-dom";
 import login from "../../apis/login";
+import { useRecoilState } from "recoil";
+import { rc_token } from "../../store/user";
 
 //필요한 변수 선언, 함수 정의 등등 처리 후 propDatas로 컴포넌트파일에 넘긴다
 const LoginContainer = () => {
   const navigate = useNavigate();
+  const [token, setToken] = useRecoilState(rc_token);
 
   // 보통은 useState사용해서 변수 선언
   // const [id, setId] = useState("");
@@ -24,6 +27,7 @@ const LoginContainer = () => {
 
         if (response) {
           // 성공 시 페이지 이동
+          setToken(response.headers.authorization);
           navigate("/issue");
         }
       } catch (err) {
@@ -38,6 +42,8 @@ const LoginContainer = () => {
       alert("아이디와 비밀번호를 입력해주세요.");
     }
   };
+
+  console.log(token);
 
   // 상태 관리: id, pw, 에러 상태
   const [userId, setId] = useState("");

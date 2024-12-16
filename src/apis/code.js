@@ -36,7 +36,7 @@ const code = {
     if (!data.body)
       throw new Error("Comment body is required to add a comment.");
 
-    return await apiCall(apiClient, "post", "/api/code/add/", {
+    return await apiCall(apiClient, "post", "/api/code/add", {
       params: data.head,
       body: data.body,
     });
